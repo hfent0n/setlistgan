@@ -7,9 +7,16 @@ import {songOptions} from './data/songOptions';
 
 import './styles.css';
 
-export function Song() {
+export function Song(props) {
+
+  const handleChange = (e) => {
+    const prediction = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
+    props.onChange(prediction);
+  }
+
   return (
     <Select
+      onChange={handleChange}
       options={songOptions}
       filterOption={createFilter({ ignoreAccents: false })}
       components={optimizeSelect.components}

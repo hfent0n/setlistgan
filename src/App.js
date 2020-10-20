@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
-import {Song} from './Song';
-
+import { SongContainer } from './SongContainer'
 
 function App() {
   return (
     <div className="App">
-     <Song />
+     <SongContainer />
     </div>
   );
 }
