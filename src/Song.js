@@ -10,8 +10,8 @@ import './styles.css';
 export function Song(props) {
 
   const handleChange = (e) => {
-    const prediction = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
-    props.onChange(prediction);
+    const suggestion = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
+    props.onChange(suggestion);
   }
 
   return (

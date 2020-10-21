@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Song } from './Song';
-import { PredictionDisplay } from './PredictionDisplay';
+import { SuggestionDisplay, YoutubeDisplay } from './SuggestionDisplay';
+
 
 export function SongContainer(props){
-    const [prediction, setPrediction] = useState('');
+    const [suggestion, setSuggestion] = useState(null);
 
-    const changePrediction = (newPrediction) => {
-        setPrediction(newPrediction);
+    const changeSuggestion = (newSuggestion) => {
+        setSuggestion(newSuggestion);
     }
 
     return (
         <div>
-            <Song onChange={changePrediction}/>
-            <PredictionDisplay prediction={prediction}/>
+            <Song onChange={changeSuggestion} />
+            <SuggestionDisplay suggestion={suggestion} />
+            {suggestion===null ? null : <YoutubeDisplay suggestion={suggestion}/> }
         </div>
         
         

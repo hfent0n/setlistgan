@@ -10,9 +10,11 @@
     "@testing-library/user-event": "^7.2.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-iframe": "^1.8.0",
     "react-scripts": "3.4.3",
     "react-select": "^3.1.0",
-    "react-window": "^1.8.5"
+    "react-window": "^1.8.5",
+    "youtube-api-search": "0.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
