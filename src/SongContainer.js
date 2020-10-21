@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Song } from './Song';
-import { SuggestionDisplay, YoutubeDisplay } from './SuggestionDisplay';
+import { SuggestionDisplay, YoutubeDisplay, Feedback } from './SuggestionDisplay';
 
 
 export function SongContainer(props){
