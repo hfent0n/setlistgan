@@ -2,7 +2,6 @@ import React from 'react';
 import { FixedSizeList } from 'react-window';
 import { components } from 'react-select';
 import Select, { createFilter } from "react-select";
-
 import {songOptions} from './data/songOptions';
 
 import './styles.css';
