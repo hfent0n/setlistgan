@@ -1,12 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Iframe from 'react-iframe';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IconButton from '@material-ui/core/IconButton';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 
 export function Saved(props){
-
     return (
         <div>
-            {props.saved.map((save, index) => (
-                <p key={index}>Hello, {save.title}!</p>
-            ))}
+            <div>
+                <IconButton onClick={() => props.onShowSaved(null)}>
+                    <ArrowBackIcon />
+                </IconButton>
+            </div>
+            <div>
+                {props.saved.map((save, index) => (
+                    <div>
+                    <h1 key={index}>{save.title}</h1>
+                    <Iframe url={`http://www.youtube.com/embed/${save.video}`}
+                        width="450px"
+                        height="450px"
+                        id="myId"
+                        className="myClassname"
+                        display="initial"
+                        position="relative"/>
+                    <IconButton >
+                        <BackspaceIcon />
+                    </IconButton>
+                    </div>
+                ))}
+            </div>
         </div>
+
     );
 }

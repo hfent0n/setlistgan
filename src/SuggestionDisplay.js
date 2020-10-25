@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Iframe from 'react-iframe';
 import YTSearch from 'youtube-api-search';
-import Button from '@material-ui/core/Button';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import IconButton from '@material-ui/core/IconButton';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { useCookies } from 'react-cookie';
 import SaveIcon from '@material-ui/icons/Save';
 import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -26,8 +23,8 @@ export function YoutubeDisplay(props){
     const [url, setUrl] = useState('');
     
     useEffect(() => {
-        YTSearch({key: 'AIzaSyBgIgflUoEkpA6pk6MPdjfg9bhLMG1ycps', term: props.suggestion}, (videos) =>{
-            console.log(videos[0].id.videoId);
+        YTSearch({key: 'AIzaSyBgIgflUoEkpA6pk6MPdjfg9bhLMG1ycps', term: props.suggestion, results: 1}, (videos) =>{
+            console.log(videos);
             setUrl(videos[0].id.videoId);
             props.onChange(props.suggestion, videos[0].id.videoId);
         });
@@ -74,9 +71,7 @@ export function Feedback(props) {
 
     const [showSaved, setShowSaved] = useState('');
     const handleShowSaved = (event, newShowSaved) => {
-        
-        setShowSaved(newShowSaved);
-        console.log(showSaved)
+        props.onShowSaved(newShowSaved);
     }
     
    

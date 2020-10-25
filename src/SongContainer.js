@@ -22,7 +22,12 @@ export function SongContainer(props){
             setSaved((prev) => ([...prev, video]));
         }
         else {
-            console.log("remove")
+            console.log(saved)
+            console.log(video);
+            setSaved((prev) => {
+                return prev.filter((item => item.title !== video.title))
+            });
+            console.log(saved)
         }
     }
 
@@ -42,20 +47,26 @@ export function SongContainer(props){
         })
     )});
 
+    const [showSaved, setShowSaved] = useState('');
+    const changeShowSaved = ((show) => {
+        setShowSaved(show);
+        
+    })
 
-    const saveButton = {
-
+    if (showSaved !== 'saved'){
+        return (
+            <div>
+                <Song onChange={changeSuggestion} />
+                <SuggestionDisplay suggestion={suggestion}/>
+                {suggestion===null ? null : <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/> }
+                <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} suggestion={suggestion}/>
+                
+            </div>
+            
+            
+        );
     }
-
-    return (
-        <div>
-            <Song onChange={changeSuggestion} />
-            <SuggestionDisplay suggestion={suggestion}/>
-            {suggestion===null ? null : <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/> }
-            <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} suggestion={suggestion}/>
-            <Saved saved={saved}/>
-        </div>
-        
-        
-    );
+    else{
+        return <Saved saved={saved} onShowSaved={changeShowSaved}/>
+    }
 }
