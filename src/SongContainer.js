@@ -31,6 +31,12 @@ export function SongContainer(props){
         }
     }
 
+    const removeSave = (title) => { 
+        setSaved((prev) => { 
+            return prev.filter((item => item.title !== title ))
+        })
+    }
+
     const [video, setVideo] = useState({});
     const changeVideo = ((title, newVideo) => {
         setVideo({
@@ -67,6 +73,6 @@ export function SongContainer(props){
         );
     }
     else{
-        return <Saved saved={saved} onShowSaved={changeShowSaved}/>
+        return <Saved saved={saved} onShowSaved={changeShowSaved} removeSave={removeSave}/>
     }
 }
