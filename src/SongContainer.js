@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Song } from './Song';
 import { SuggestionDisplay, YoutubeDisplay, Feedback } from './SuggestionDisplay';
 import { Saved } from './Saved'
+import Grid from '@material-ui/core/Grid';
 
 export function SongContainer(props){
     const [suggestion, setSuggestion] = useState(null);
@@ -60,17 +61,65 @@ export function SongContainer(props){
     })
 
     if (showSaved !== 'saved'){
-        return (
-            <div>
-                <Song onChange={changeSuggestion} />
-                <SuggestionDisplay suggestion={suggestion}/>
-                {suggestion===null ? null : <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/> }
-                <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} suggestion={suggestion}/>
+        if (suggestion==null){
+            return (
+                <div>
+                    <Grid 
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="flex-end"
+                        style={{ minHeight: '30vh' }}
+                    >
+                        <Grid item xs={6}>   
+                            <Song onChange={changeSuggestion} />
+                        </Grid>
+                    </Grid>
+                    
+                    
+                </div>
                 
-            </div>
-            
-            
-        );
+                
+            );
+        }
+
+        else{
+            return (
+                <div>
+                    <Grid 
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                    >
+                        <Grid item xs={6}>   
+                            <Song onChange={changeSuggestion} />
+                        </Grid>
+                    </Grid>
+                    
+                    
+                    <Grid
+                        container
+                        direction="column"
+                        justify="flex-start"
+                        alignItems="center"
+                    >
+
+                        <grid item >
+                            <SuggestionDisplay suggestion={suggestion}/>
+                        </grid>
+                        <grid item >
+                            <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/>
+                        </grid>
+                        <grid item >
+                            <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} suggestion={suggestion}/>
+                        </grid>
+                        
+                    </Grid>
+                </div>
+            );
+        }
+    
     }
     else{
         return <Saved saved={saved} onShowSaved={changeShowSaved} removeSave={removeSave}/>
