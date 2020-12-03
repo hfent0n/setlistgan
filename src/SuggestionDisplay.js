@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Iframe from 'react-iframe';
 import YTSearch from 'youtube-api-search';
 import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import SaveIcon from '@material-ui/icons/Save';
@@ -10,12 +11,97 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Grid from '@material-ui/core/Grid';
-import { spacing } from '@material-ui/system';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import album from './img/album.jpg';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+    },
+    details: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    content: {
+      flex: '1 0 auto',
+    },
+    controls: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingLeft: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+    },
+    playIcon: {
+      height: 38,
+      width: 38,
+    },
+    gridContainer : {
+        paddingTop: "20px",
+        paddingBottom: "20px"
+    }
+  }));
+
+  
+
+export function SuggestionCard(props){
+    const classes = useStyles();
+    const theme = useTheme();
+
+    const styles = {
+        media: {
+            height: 100,
+            width: 100
+          },
+    }
+    console.log(typeof(props.suggestion))
+    
+    console.log(props.suggestion)
+    const suggestions = props.suggestion.map((x, index) => (
+        <Grid item xs = {12}>
+        <Card key = {index}>
+            <div className={classes.details}>
+                <Grid 
+                    container
+                >
+                <CardMedia
+                    className={classes.media}
+                    image={require('./img/album.jpg')}
+                    title="Live from space album cover"
+                    style={styles.media}
+                />
+                <CardContent className={classes.content}>
+                    <Typography component="h5" variant="h5">
+                        {x.title}
+                    </Typography>
+                    <Typography variant="subtitle1" color="textSecondary">
+                        {x.artist}
+                    </Typography>
+                </CardContent>
+                </Grid>
+            
+            
+            </div>
+        </Card>
+        </Grid>
+        ))
+    return(
+        <Grid
+            container
+            spacing={2}
+        >
+            {suggestions}
+
+        </Grid>
+    );
+}
 
 export function SuggestionDisplay(props){
     return (
         <div>
-            <h1>{props.suggestion}</h1>
+            <Typography variant="h5" component="h5">{props.suggestion}</Typography>
         </div>
     );
 }

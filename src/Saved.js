@@ -3,22 +3,23 @@ import Iframe from 'react-iframe';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import BackspaceIcon from '@material-ui/icons/Backspace';
+import Grid from '@material-ui/core/Grid';
 
 export function Saved(props){
     var saved = props.saved.map((save, index) => (
-        <div>
-        <h1 key={index}>{save.title}</h1>
-        <Iframe url={`http://www.youtube.com/embed/${save.video}`}
-            width="450px"
-            height="450px"
-            id="myId"
-            className="myClassname"
-            display="initial"
-            position="relative"/>
-        <IconButton onClick={() => props.removeSave(save.title)}>
-            <BackspaceIcon />
-        </IconButton>
-        </div>
+        <Grid item>
+            <h1 key={index}>{save.title}</h1>
+            <Iframe url={`http://www.youtube.com/embed/${save.video}`}
+                width="450px"
+                height="450px"
+                id="myId"
+                className="myClassname"
+                display="initial"
+                position="relative"/>
+            <IconButton onClick={() => props.removeSave(save.title)}>
+                <BackspaceIcon />
+            </IconButton>
+        </Grid>
     ))
     return (
         <div>
@@ -27,11 +28,20 @@ export function Saved(props){
                     <ArrowBackIcon />
                 </IconButton>
             </div>
-            <div>
+            <Grid 
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                        >
                 
-                {saved.length ? saved : <p>Nothing here!</p>}
+                    <div>
+                        
+                        {saved.length ? saved : <p>Nothing here!</p>}
 
-            </div>
+                    </div>
+                
+            </Grid>
         </div>
 
     );

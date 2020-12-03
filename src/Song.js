@@ -9,7 +9,10 @@ import './styles.css';
 export function Song(props) {
 
   const handleChange = (e) => {
-    const suggestion = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
+    //const suggestion = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
+    const keys = Object.keys(e.value);
+    const suggestion = keys.map(x => ({artist: x.split(" - ")[0], title: x.split(" - ")[1]})); 
+    
     props.onChange(suggestion);
   }
 

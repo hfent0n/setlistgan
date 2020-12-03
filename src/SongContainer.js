@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Song } from './Song';
-import { SuggestionDisplay, YoutubeDisplay, Feedback } from './SuggestionDisplay';
+import { SuggestionDisplay, YoutubeDisplay, Feedback, SuggestionCard } from './SuggestionDisplay';
 import { Saved } from './Saved'
 import Grid from '@material-ui/core/Grid';
+
+import Paper from "@material-ui/core/Paper";
+
 
 export function SongContainer(props){
     const [suggestion, setSuggestion] = useState(null);
     const changeSuggestion = (newSuggestion) => {
         setSuggestion(newSuggestion);
     }
-
+    
+   
     const [saved, setSaved] = useState([]);
     const [savedButton, setSavedButton] = useState({})
     const changeSaved = (newSaved) => {
@@ -60,6 +64,7 @@ export function SongContainer(props){
         
     })
 
+
     if (showSaved !== 'saved'){
         if (suggestion==null){
             return (
@@ -86,7 +91,7 @@ export function SongContainer(props){
         else{
             return (
                 <div>
-                    <Grid 
+                    {/* <Grid 
                         container
                         direction="row"
                         justify="center"
@@ -95,7 +100,7 @@ export function SongContainer(props){
                         <Grid item xs={6}>   
                             <Song onChange={changeSuggestion} />
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                     
                     
                     <Grid
@@ -103,17 +108,24 @@ export function SongContainer(props){
                         direction="column"
                         justify="flex-start"
                         alignItems="center"
+                        spacing={1}
                     >
 
-                        <grid item >
+                        <Grid item xs={8} style={{ minWidth: '60%'}} >   
+                            <Song onChange={changeSuggestion} />
+                        </Grid>
+                        <Grid item xs={8} style={{ minWidth: '40%'}}>
+                            <SuggestionCard suggestion={suggestion}/>
+                        </Grid>
+                        {/* <Grid item >
                             <SuggestionDisplay suggestion={suggestion}/>
-                        </grid>
-                        <grid item >
+                        </Grid> */}
+                        {/* <Grid item >
                             <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/>
-                        </grid>
-                        <grid item >
+                        </Grid> */}
+                        {/* <Grid item >
                             <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} suggestion={suggestion}/>
-                        </grid>
+                        </Grid> */}
                         
                     </Grid>
                 </div>
