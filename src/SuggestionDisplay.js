@@ -16,39 +16,39 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import album from './img/album.jpg';
+import IconButton from '@material-ui/core/IconButton';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
+      justifyContent: 'flex-start',
+      
+    },
+    media: { 
+        display: 'flex'
     },
     details: {
       display: 'flex',
-      flexDirection: 'column',
+      flexGrow: 1
+      
     },
-    content: {
-      flex: '1 0 auto',
+    feedbackButton: {
+       display: 'flex',
     },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    playIcon: {
-      height: 38,
-      width: 38,
-    },
-    gridContainer : {
-        paddingTop: "20px",
-        paddingBottom: "20px"
+    padButtons: {
+        display: 'flex', 
+        padding: '0px',
+        alignItems: 'flex-end',
+        paddingBottom: '0px !important'
     }
+
   }));
 
   
 
 export function SuggestionCard(props){
     const classes = useStyles();
-    const theme = useTheme();
 
     const styles = {
         media: {
@@ -56,23 +56,24 @@ export function SuggestionCard(props){
             width: 100
           },
     }
-    console.log(typeof(props.suggestion))
     
-    console.log(props.suggestion)
+    
+    
     const suggestions = props.suggestion.map((x, index) => (
         <Grid item xs = {12}>
-        <Card key = {index}>
-            <div className={classes.details}>
-                <Grid 
-                    container
-                >
+        <Card 
+            key = {index}
+            className={classes.root}
+        >
+            <div className={classes.media}>    
                 <CardMedia
-                    className={classes.media}
                     image={require('./img/album.jpg')}
                     title="Live from space album cover"
                     style={styles.media}
                 />
-                <CardContent className={classes.content}>
+            </div> 
+            <div className={classes.details}> 
+                <CardContent>
                     <Typography component="h5" variant="h5">
                         {x.title}
                     </Typography>
@@ -80,10 +81,16 @@ export function SuggestionCard(props){
                         {x.artist}
                     </Typography>
                 </CardContent>
-                </Grid>
-            
-            
             </div>
+            <div className={classes.feedbackButton}>
+                <CardContent
+                    className={classes.padButtons}
+    
+                >
+                    <Feedback index={index} onChange={props.onChange} onChangeLike={props.onChangeLike} likes={props.likes} savedButton={props.savedButton} onShowSaved={props.onShowSaved} suggestion={props.suggestion}/>
+                </CardContent>
+            </div>
+            
         </Card>
         </Grid>
         ))
@@ -98,13 +105,8 @@ export function SuggestionCard(props){
     );
 }
 
-export function SuggestionDisplay(props){
-    return (
-        <div>
-            <Typography variant="h5" component="h5">{props.suggestion}</Typography>
-        </div>
-    );
-}
+
+
 
 export function YoutubeDisplay(props){
     const [url, setUrl] = useState('');
@@ -144,13 +146,15 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 }))(ToggleButtonGroup);
 
 export function Feedback(props) {
+    const classes = useStyles();
 
     const handleSaved = (event, newSaved) => {
-        props.onChange(newSaved);
+        props.onChange(props.suggestion[props.index]);
+        
     }
-
-    const handleLike = (event, newLike) => {
-        props.onChangeLike(newLike)
+    
+    const handleLike = (event, newLike) => {  
+        props.onChangeLike(newLike, props.index)
     }
 
     const [showSaved, setShowSaved] = useState('');
@@ -167,39 +171,39 @@ export function Feedback(props) {
                 direction="column"
                 alignItems="flex-end"
                 justify="flex-end"
-                style = {{minWidth: '620px'}}
+                style = {{minWidth: '200px'}}
 
             >
                 <Grid item>
                     <StyledToggleButtonGroup
                         size="small"
-                        value={props.likes.[props.suggestion]}
+                        value={props.likes.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]}
                         exclusive
                         onChange={handleLike}
 
                     >
                         <Tooltip title="I Like this suggestion">
                             <ToggleButton value="like">
-                                <ThumbUpIcon color={props.likes.[props.suggestion]==='like' ? 'primary' : 'action'}/>
+                                <ThumbUpIcon color={props.likes.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]==='like' ? 'primary' : 'action'}/>
                             </ToggleButton>
                         </Tooltip>
 
                         <Tooltip title="I dislike this suggestion">
                             <ToggleButton value="dislike">
-                                <ThumbDownIcon color={props.likes.[props.suggestion]==='dislike' ? 'primary' : 'action'}/>
+                                <ThumbDownIcon color={props.likes.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]==='dislike' ? 'primary' : 'action'}/>
                             </ToggleButton>
                         </Tooltip>
                     </StyledToggleButtonGroup>
 
                     <StyledToggleButtonGroup
                         size="small"
-                        value={props.savedButton.[props.suggestion]}
+                        value={props.savedButton.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]}
                         onChange={handleSaved}
                         exclusive
                     >
                         <Tooltip title="Save">
-                            <ToggleButton value="save">
-                                <SaveIcon color={props.savedButton.[props.suggestion]==='save' ? 'primary' : 'action'}/>
+                            <ToggleButton value='save'>
+                                <SaveIcon color={props.savedButton.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]==='save' ? 'primary' : 'action'}/>
                             </ToggleButton>
                         </Tooltip>
                     </StyledToggleButtonGroup>

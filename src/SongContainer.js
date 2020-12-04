@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from './Song';
-import { SuggestionDisplay, YoutubeDisplay, Feedback, SuggestionCard } from './SuggestionDisplay';
+import { YoutubeDisplay, Feedback, SuggestionCard } from './SuggestionDisplay';
 import { Saved } from './Saved'
 import Grid from '@material-ui/core/Grid';
-
-import Paper from "@material-ui/core/Paper";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IconButton from '@material-ui/core/IconButton';
 
 
 export function SongContainer(props){
@@ -13,27 +13,41 @@ export function SongContainer(props){
         setSuggestion(newSuggestion);
     }
     
+    
    
     const [saved, setSaved] = useState([]);
     const [savedButton, setSavedButton] = useState({})
     const changeSaved = (newSaved) => {
-        setSavedButton((prev) => (
-            {
-                ...prev,
-                [suggestion]: newSaved
-            }
-        ))
-        if (newSaved==='save'){
-            setSaved((prev) => ([...prev, video]));
-        }
-        else {
-            console.log(saved)
-            console.log(video);
+        console.log(newSaved)
+        const key=newSaved.artist.concat(' - '.concat(newSaved.title))
+        console.log(saved)
+        if (saved.includes(newSaved)){
             setSaved((prev) => {
-                return prev.filter((item => item.title !== video.title))
+                return prev.filter((item => item !== newSaved))
             });
-            console.log(saved)
+
+            setSavedButton((prev) => (
+                {
+                    ...prev,
+                    [key]: 'null'
+                }
+            ))
+
         }
+        else{
+            setSaved((prev) => (
+                [...prev, newSaved]
+            ))
+
+            setSavedButton((prev) => (
+                {
+                    ...prev,
+                    [key]: 'save'
+                }
+            ))
+        }
+        
+    
     }
 
     const removeSave = (title) => { 
@@ -51,10 +65,11 @@ export function SongContainer(props){
     })
 
     const [likes, setLikes] = useState({});
-    const changeLike = ((newLike) => {
+    const changeLike = ((newLike, index) => {
+        const key = suggestion[index].artist.concat(' - '.concat(suggestion[index].title))
         setLikes((prev) => ({
             ...prev,
-            [suggestion]: newLike
+            [key]: newLike
         })
     )});
 
@@ -64,6 +79,7 @@ export function SongContainer(props){
         
     })
 
+    console.log(suggestion)
 
     if (showSaved !== 'saved'){
         if (suggestion==null){
@@ -115,7 +131,7 @@ export function SongContainer(props){
                             <Song onChange={changeSuggestion} />
                         </Grid>
                         <Grid item xs={8} style={{ minWidth: '40%'}}>
-                            <SuggestionCard suggestion={suggestion}/>
+                            <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
                         </Grid>
                         {/* <Grid item >
                             <SuggestionDisplay suggestion={suggestion}/>
@@ -134,6 +150,14 @@ export function SongContainer(props){
     
     }
     else{
-        return <Saved saved={saved} onShowSaved={changeShowSaved} removeSave={removeSave}/>
+        return (
+            <div>
+                <IconButton onClick={() => setShowSaved(null)}>
+                    <ArrowBackIcon />
+                </IconButton>
+                <SuggestionCard suggestion={saved} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
+            </div>
+        )
+        
     }
 }
