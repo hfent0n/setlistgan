@@ -23,14 +23,19 @@ const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
       justifyContent: 'flex-start',
-      
+      overflow: 'visible !important',
+      margin:'20px'
     },
     media: { 
-        display: 'flex'
+        display: 'flex',
+        position: 'relative',
+        left: '20px',
+        top: '-20px',
     },
     details: {
       display: 'flex',
-      flexGrow: 1
+      flexGrow: 1,
+      paddingLeft: '20px'
       
     },
     feedbackButton: {
@@ -65,8 +70,9 @@ export function SuggestionCard(props){
             key = {index}
             className={classes.root}
         >
-            <div className={classes.media}>    
+            <div >    
                 <CardMedia
+                    className={classes.media}
                     image={require('./img/album.jpg')}
                     title="Live from space album cover"
                     style={styles.media}

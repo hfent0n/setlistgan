@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from './Song';
-import { YoutubeDisplay, Feedback, SuggestionCard } from './SuggestionDisplay';
-import { Saved } from './Saved'
+import { SuggestionCard } from './SuggestionDisplay';
 import Grid from '@material-ui/core/Grid';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
@@ -107,18 +106,6 @@ export function SongContainer(props){
         else{
             return (
                 <div>
-                    {/* <Grid 
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                    >
-                        <Grid item xs={6}>   
-                            <Song onChange={changeSuggestion} />
-                        </Grid>
-                    </Grid> */}
-                    
-                    
                     <Grid
                         container
                         direction="column"
@@ -133,15 +120,6 @@ export function SongContainer(props){
                         <Grid item xs={8} style={{ minWidth: '40%'}}>
                             <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
                         </Grid>
-                        {/* <Grid item >
-                            <SuggestionDisplay suggestion={suggestion}/>
-                        </Grid> */}
-                        {/* <Grid item >
-                            <YoutubeDisplay onChange ={changeVideo} suggestion={suggestion}/>
-                        </Grid> */}
-                        {/* <Grid item >
-                            <Feedback onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} suggestion={suggestion}/>
-                        </Grid> */}
                         
                     </Grid>
                 </div>

@@ -1,69 +1,34 @@
 import React from 'react';
-import { FixedSizeList } from 'react-window';
-import { components } from 'react-select';
-import Select, { createFilter } from "react-select";
 import {songOptions} from './data/songOptions';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 
-import './styles.css';
+
+
 
 export function Song(props) {
 
   const handleChange = (e) => {
-    //const suggestion = Object.keys(e.value).reduce((a, b) => e.value[a] > e.value[b] ? a : b);
-    const keys = Object.keys(e.value);
-    const suggestion = keys.map(x => ({artist: x.split(" - ")[0], title: x.split(" - ")[1]})); 
+    console.log(e)
+    if (e!==null){
+      const keys = Object.keys(e.value);
+      const suggestion = keys.map(x => ({artist: x.split(" - ")[0], title: x.split(" - ")[1]})); 
+      
+      props.onChange(suggestion);
+    }
     
-    props.onChange(suggestion);
   }
 
   return (
-    <Select
-      onChange={handleChange}
+
+    <Autocomplete
+      id="song-choice"
       options={songOptions}
-      filterOption={createFilter({ ignoreAccents: false })}
-      components={optimizeSelect.components}
-      isClearable={true}
-      isFocused={false}
+      getOptionLabel={(option) => option.label}
+      renderInput={(params) => <TextField {...params} label="Song choice" variant="outlined" />}
+      onChange={(event, e) => handleChange(e)}
     />
   );
-}
-const optimizeSelect = {
-  components: {
-    MenuList: OptimizedMenuList,
-    Option: OptimizedOption,
-  },
-}
-
-function OptimizedMenuList(props) {
-  const { options, children, maxHeight, getValue } = props;
-  if (!children || !Array.isArray(children)) return null;
-
-  const height = 35;
-  const selectedValues = getValue();
-  const initialOffset = selectedValues[0] ? options.indexOf(selectedValues[0]) * height : 0;
-
-  return (
-    <FixedSizeList
-      width={''}
-      itemSize={height}
-      height={maxHeight}
-      itemCount={children.length}
-      initialScrollOffset={initialOffset}
-    >
-      {({ index, style }) => (
-        <div className="option-wrapper" style={style}>
-          {children[index]}
-        </div>
-      )}
-    </FixedSizeList>
-  )
-}
-
-function OptimizedOption(props) {
-  const {innerProps, isFocused, ...otherProps} = props;
-  const {onMouseMove, onMouseOver, ...otherInnerProps} = innerProps;
-  const newProps = {innerProps: {...otherInnerProps}, ...otherProps};
-  return <components.Option  {...newProps} className="optimized-option">{props.children}</components.Option>;
 }
 
 
