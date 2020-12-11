@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Iframe from 'react-iframe';
 import YTSearch from 'youtube-api-search';
 import { withStyles } from '@material-ui/core/styles';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import SaveIcon from '@material-ui/icons/Save';
@@ -15,9 +15,9 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import album from './img/album.jpg';
-import IconButton from '@material-ui/core/IconButton';
-import BackspaceIcon from '@material-ui/icons/Backspace';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+import albumArt from 'album-art';
+//const albumArt = require('album-art')
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,8 +29,9 @@ const useStyles = makeStyles((theme) => ({
     media: { 
         display: 'flex',
         position: 'relative',
-        left: '20px',
+        left: '15px',
         top: '-20px',
+        boxShadow: '0 3px 4px 0 rgba(0,0,0,0.5)'
     },
     details: {
       display: 'flex',
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
   }));
 
-  
+
 
 export function SuggestionCard(props){
     const classes = useStyles();
@@ -61,7 +62,58 @@ export function SuggestionCard(props){
             width: 100
           },
     }
+
     
+
+    const [art, setArt] = useState({});
+    useEffect(() => {
+        props.suggestion.forEach(suggestion => {
+            const key = suggestion.artist + ' - ' + suggestion.title
+            console.log(key)
+            albumArt(suggestion.artist, {album: suggestion.title, size:'medium'} , ( error, response ) => {
+                if (typeof(response) !== "string"){
+                    albumArt(suggestion.artist, {size:'medium'} , ( error, response ) => {
+                        if (typeof(response) !== "string"){
+                            setArt((prev) => (
+                                {
+                                    ...prev, 
+                                    [key]: 'https://images.eil.com/large_image/QUEEN_THE%2BGAME-318339.jpg'
+                                
+                                }
+                            ))
+                        }
+                        else{
+                            setArt((prev) => (
+                                {
+                                    ...prev, 
+                                    [key]: response
+                                
+                                }
+                            ))
+                        }
+                    })
+                }
+                else{
+                    setArt((prev) => (
+                        {
+                            ...prev, 
+                            [key]: response
+                        
+                        }
+                    ))
+                }
+                
+            })
+        })
+        return () => setArt({});
+    }, [props.suggestion])
+    
+    
+    
+
+    
+    console.log(art);
+    console.log(art[0]);
     
     
     const suggestions = props.suggestion.map((x, index) => (
@@ -73,7 +125,7 @@ export function SuggestionCard(props){
             <div >    
                 <CardMedia
                     className={classes.media}
-                    image={require('./img/album.jpg')}
+                    image={art.[x.artist + ' - ' + x.title]}
                     title="Live from space album cover"
                     style={styles.media}
                 />
@@ -181,6 +233,17 @@ export function Feedback(props) {
 
             >
                 <Grid item>
+                    <StyledToggleButtonGroup
+                        size="small"
+                        
+
+                    >
+                        <Tooltip title="View on Youtube">
+                            <ToggleButton value="Youtube">
+                                <YouTubeIcon/>
+                            </ToggleButton>
+                        </Tooltip>
+                    </StyledToggleButtonGroup>
                     <StyledToggleButtonGroup
                         size="small"
                         value={props.likes.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]}

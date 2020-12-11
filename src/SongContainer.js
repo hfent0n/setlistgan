@@ -17,9 +17,7 @@ export function SongContainer(props){
     const [saved, setSaved] = useState([]);
     const [savedButton, setSavedButton] = useState({})
     const changeSaved = (newSaved) => {
-        console.log(newSaved)
         const key=newSaved.artist.concat(' - '.concat(newSaved.title))
-        console.log(saved)
         if (saved.includes(newSaved)){
             setSaved((prev) => {
                 return prev.filter((item => item !== newSaved))
@@ -78,7 +76,6 @@ export function SongContainer(props){
         
     })
 
-    console.log(suggestion)
 
     if (showSaved !== 'saved'){
         if (suggestion==null){
