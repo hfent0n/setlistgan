@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Iframe from 'react-iframe';
+import React, { useState, useEffect, useRef } from 'react';
 import YTSearch from 'youtube-api-search';
 import { withStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +16,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 import albumArt from 'album-art';
-//const albumArt = require('album-art')
+import ReactPlayer from 'react-player'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,6 +46,14 @@ const useStyles = makeStyles((theme) => ({
         padding: '0px',
         alignItems: 'flex-end',
         paddingBottom: '0px !important'
+    },
+    youtube: {
+        color: 'rgba(255, 0, 0, 1)'
+    },
+    player: { 
+        display: 'flex',
+        justifyContent: 'center'
+
     }
 
   }));
@@ -69,7 +76,6 @@ export function SuggestionCard(props){
     useEffect(() => {
         props.suggestion.forEach(suggestion => {
             const key = suggestion.artist + ' - ' + suggestion.title
-            console.log(key)
             albumArt(suggestion.artist, {album: suggestion.title, size:'medium'} , ( error, response ) => {
                 if (typeof(response) !== "string"){
                     albumArt(suggestion.artist, {size:'medium'} , ( error, response ) => {
@@ -109,11 +115,25 @@ export function SuggestionCard(props){
     }, [props.suggestion])
     
     
+    const [youtube, setYoutube] = useState({});
+    useEffect(() => {
+        setYoutube(props.suggestion.reduce((acc, val) => (acc[val.artist + ' - ' + val.title] = false, acc), {}));
+        return () => setYoutube({});
+    }, props.suggestion)
+    const onYoutube = (newYoutube, suggestion) => {
+        const key = suggestion.artist + ' - ' + suggestion.title;
+        
+        setYoutube((prev) =>(
+            {
+                ...prev,
+                [key]: newYoutube
+            }
+        ))
+        
+    }
     
-
     
-    console.log(art);
-    console.log(art[0]);
+    
     
     
     const suggestions = props.suggestion.map((x, index) => (
@@ -145,11 +165,15 @@ export function SuggestionCard(props){
                     className={classes.padButtons}
     
                 >
-                    <Feedback index={index} onChange={props.onChange} onChangeLike={props.onChangeLike} likes={props.likes} savedButton={props.savedButton} onShowSaved={props.onShowSaved} suggestion={props.suggestion}/>
+                    <Feedback index={index} onChange={props.onChange} onChangeLike={props.onChangeLike} likes={props.likes} savedButton={props.savedButton} onShowSaved={props.onShowSaved} suggestion={props.suggestion} onYoutube={onYoutube}/>
                 </CardContent>
             </div>
             
         </Card>
+        <div className={classes.player}>
+            <YoutubeDisplay  youtube={youtube[x.artist + ' - ' + x.title]} suggestion={x.artist + ' - ' + x.title}></YoutubeDisplay>
+        </div>
+        
         </Grid>
         ))
     return(
@@ -164,27 +188,43 @@ export function SuggestionCard(props){
 }
 
 
-
-
 export function YoutubeDisplay(props){
     const [url, setUrl] = useState('');
     
+    
     useEffect(() => {
-        YTSearch({key: 'AIzaSyBgIgflUoEkpA6pk6MPdjfg9bhLMG1ycps', term: props.suggestion, results: 1}, (videos) =>{
-            console.log(videos);
-            setUrl(videos[0].id.videoId);
-            props.onChange(props.suggestion, videos[0].id.videoId);
-        });
+        if (url === '' && props.youtube === true){
+            
+            // YTSearch({key: 'AIzaSyBgIgflUoEkpA6pk6MPdjfg9bhLMG1ycps', term: props.suggestion, results: 1}, (videos) =>{
+            //     setUrl(videos[0].id.videoId);
+            // });
+            setUrl('https://www.youtube.com/watch?v=VsUwrz6QMBI');
+            console.log("SET!");
+        }
+        else{
+            console.log(url)
+        }
+        
+    }, [props.youtube]);
+       
 
         
-    }, [props.suggestion]);
+ 
+    if (props.youtube === true){
+        return (
+            <ReactPlayer url={`http://www.youtube.com/embed/${url}`}
+                width="600px"
+                height="450px"
+            />
+        );
+    }
 
-    return (
-        <Iframe url={`http://www.youtube.com/embed/${url}`}
-            width="600px"
-            height="450px"
-        />
-    );
+    else{
+        return(null)
+    }
+
+
+    
 }
 
 
@@ -203,6 +243,7 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
     },
 }))(ToggleButtonGroup);
 
+
 export function Feedback(props) {
     const classes = useStyles();
 
@@ -220,6 +261,12 @@ export function Feedback(props) {
         props.onShowSaved(newShowSaved);
     }
     
+   const [youtube, setYoutube] = useState(false) 
+   const handleYoutube = (event, newYoutube) => {
+        setYoutube(!youtube);
+        props.onYoutube(!youtube, props.suggestion[props.index]);
+   }
+   
    
 
     return (
@@ -233,17 +280,16 @@ export function Feedback(props) {
 
             >
                 <Grid item>
-                    <StyledToggleButtonGroup
-                        size="small"
-                        
-
-                    >
-                        <Tooltip title="View on Youtube">
-                            <ToggleButton value="Youtube">
-                                <YouTubeIcon/>
-                            </ToggleButton>
-                        </Tooltip>
-                    </StyledToggleButtonGroup>
+                <StyledToggleButtonGroup>
+                    <Tooltip title="View on Youtube">
+                        <ToggleButton 
+                            value="Youtube"
+                            onChange={handleYoutube}
+                        >
+                            <YouTubeIcon className={classes.youtube}/>
+                        </ToggleButton>
+                    </Tooltip>
+                </StyledToggleButtonGroup>
                     <StyledToggleButtonGroup
                         size="small"
                         value={props.likes.[props.suggestion[props.index].artist.concat(' - '.concat(props.suggestion[props.index].title))]}

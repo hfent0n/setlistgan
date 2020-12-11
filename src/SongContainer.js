@@ -53,13 +53,7 @@ export function SongContainer(props){
         })
     }
 
-    const [video, setVideo] = useState({});
-    const changeVideo = ((title, newVideo) => {
-        setVideo({
-            title: title,
-            video: newVideo
-        });
-    })
+    
 
     const [likes, setLikes] = useState({});
     const changeLike = ((newLike, index) => {
@@ -114,7 +108,7 @@ export function SongContainer(props){
                         <Grid item xs={8} style={{ minWidth: '60%'}} >   
                             <Song onChange={changeSuggestion} />
                         </Grid>
-                        <Grid item xs={8} style={{ minWidth: '40%'}}>
+                        <Grid item xs={8} style={{ minWidth: '65%'}}>
                             <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
                         </Grid>
                         
@@ -125,6 +119,7 @@ export function SongContainer(props){
     
     }
     else{
+        
         return (
             <div>
                 <IconButton onClick={() => setShowSaved(null)}>
