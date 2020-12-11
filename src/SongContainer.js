@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from './Song';
 import { SuggestionCard } from './SuggestionDisplay';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
+import SaveIcon from '@material-ui/icons/Save';
+import { Save } from '@material-ui/icons';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      justifyContent: 'center',
+      
+    }
+    
+  }));
 
 
 export function SongContainer(props){
+    
+    const classes=useStyles();
+    
     const [suggestion, setSuggestion] = useState(null);
     const changeSuggestion = (newSuggestion) => {
         setSuggestion(newSuggestion);
@@ -119,7 +135,23 @@ export function SongContainer(props){
     
     }
     else{
-        
+        if (saved.length == 0){
+            return (
+                <div>
+                    <IconButton onClick={() => setShowSaved(null)}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <div className ={classes.root}>
+                    <Typography variant="h3" gutterBottom>
+                        Nothing to show. Click the Save Icon to save suggestions.
+                    </Typography>
+                    </div>
+                    <div className ={classes.root}>
+                        <SaveIcon style={{ fontSize: 100 }} ></SaveIcon>
+                    </div>
+                </div>
+            )
+        }
         return (
             <div>
                 <IconButton onClick={() => setShowSaved(null)}>
