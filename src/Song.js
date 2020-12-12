@@ -11,9 +11,8 @@ export function Song(props) {
   const handleChange = (e) => {
     if (e!==null){
       const keys = Object.keys(e.value);
-      const suggestion = keys.map(x => ({artist: x.split(" - ")[0], title: x.split(" - ")[1]})); 
-      
-      props.onChange(suggestion);
+      const suggestion = keys.map(x => ({artist: x.split(" - ")[0], title: x.split(" - ")[1]}));
+      props.onChange(e.label, suggestion);
     }
     
   }

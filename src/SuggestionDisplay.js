@@ -146,7 +146,7 @@ export function SuggestionCard(props){
                 <CardMedia
                     className={classes.media}
                     image={art.[x.artist + ' - ' + x.title]}
-                    title="Live from space album cover"
+                    title=""
                     style={styles.media}
                 />
             </div> 
@@ -178,6 +178,7 @@ export function SuggestionCard(props){
         ))
     return(
         <Grid
+            style={{marginTop: 10}}
             container
             spacing={2}
         >

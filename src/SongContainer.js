@@ -6,14 +6,43 @@ import Grid from '@material-ui/core/Grid';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
-import { Save } from '@material-ui/icons';
+import { Save, SportsRugbySharp } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
+import albumArt from 'album-art';
+import { Card, CardMedia } from '@material-ui/core';
+import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Paper';
+import { NonceProvider } from 'react-select';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
       justifyContent: 'center',
       
+    },
+    media: {
+        display: 'flex',
+        height: '300',
+        width: '100%'
+    },
+    card: {
+        position: 'relative'  
+    },
+    overlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        height: '60%',
+        width: '100%',
+        display: 'block',
+        color: '#FFF',
+        background: 'rgba(0, 0, 0, 0.5)'
+
+    },
+    overlayInfo: {
+        marginLeft: 20,
+        
+
     }
     
   }));
@@ -21,11 +50,20 @@ const useStyles = makeStyles((theme) => ({
 
 export function SongContainer(props){
     
+    const styles = {
+        media: {
+            height: 300,
+            width: '100%'
+          }
+    }
+
     const classes=useStyles();
     
+    const [song, setSong] = useState(null);
     const [suggestion, setSuggestion] = useState(null);
-    const changeSuggestion = (newSuggestion) => {
+    const changeSuggestion = (newSong, newSuggestion) => {
         setSuggestion(newSuggestion);
+        setSong(newSong)
     }
     
     
@@ -86,6 +124,29 @@ export function SongContainer(props){
         
     })
 
+    const [art, setArt] = useState('')
+    useEffect(() => {
+        if (song !== null){
+            console.log(song)
+            albumArt(song.split(" - ")[0], {album: song.split(" - ")[1], size:'large'} , ( error, response ) => {
+                if (typeof(response) !== "string"){
+                    albumArt(song.split(" - ")[0], {size:'medium'} , ( error, response ) => {
+                        if (typeof(response) !== "string"){
+                            setArt('https://images.eil.com/large_image/QUEEN_THE%2BGAME-318339.jpg')
+                        }
+                        else{
+                            setArt(response)
+                        }
+                    })
+                }
+                else{
+                    setArt(response)
+                }
+                
+            })
+        }
+    }, [song])
+
 
     if (showSaved !== 'saved'){
         if (suggestion==null){
@@ -123,6 +184,30 @@ export function SongContainer(props){
 
                         <Grid item xs={8} style={{ minWidth: '60%'}} >   
                             <Song onChange={changeSuggestion} />
+                        </Grid>
+                        <Grid item xs={12} style={{ minWidth: '70%'}}>
+                            <Card className={classes.card}>
+                                <CardMedia
+                                    className={classes.media}
+                                    title=""
+                                    image={art}
+                                    style={styles.media}
+                                />
+                                
+                                <div className={classes.overlay}>
+                                    <div className={classes.overlayInfo}>
+                                        <Typography component="h6" style={{paddingBottom: 20, paddingTop: 10}}>
+                                            Suggestions based on:
+                                        </Typography>
+                                        <Typography component="h3" variant="h3">
+                                            {song.split(" - ")[1]}
+                                        </Typography>
+                                        <Typography variant="subtitle1" style={{position: "absolute", bottom: 3}}>
+                                            by {song.split(" - ")[0]}
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </Card>
                         </Grid>
                         <Grid item xs={8} style={{ minWidth: '65%'}}>
                             <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
