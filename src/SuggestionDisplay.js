@@ -195,10 +195,10 @@ export function YoutubeDisplay(props){
     useEffect(() => {
         if (url === '' && props.youtube === true){
             
-            // YTSearch({key: 'AIzaSyAWZ_kI06oQLDacuFiRX7mITlT-PvmVgOw', term: props.suggestion, results: 1}, (videos) =>{
-            //     setUrl(videos[0].id.videoId);
-            // });
-            setUrl('https://www.youtube.com/watch?v=qEoxJ0QZkZ4');
+            YTSearch({key: 'AIzaSyAWZ_kI06oQLDacuFiRX7mITlT-PvmVgOw', term: props.suggestion, results: 1}, (videos) =>{
+                setUrl(videos[0].id.videoId);
+            });
+            //setUrl('https://www.youtube.com/watch?v=qEoxJ0QZkZ4');
             console.log("SET!");
         }
         else{
