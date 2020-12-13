@@ -9,7 +9,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import Typography from '@material-ui/core/Typography';
 import albumArt from 'album-art';
 import { Card, CardMedia } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,14 +63,18 @@ export function SongContainer(props){
     }
     
     
-   
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+      }
+    
     const [saved, setSaved] = useState([]);
-    const [savedButton, setSavedButton] = useState({})
+    const [savedButton, setSavedButton] = useState({});
+    const [snackbar, setSnackbar] = useState(false);
     const changeSaved = (newSaved) => {
         const key=newSaved.artist.concat(' - '.concat(newSaved.title))
         if (saved.includes(newSaved)){
             setSaved((prev) => {
-                return prev.filter((item => item !== newSaved))
+                return prev.filter((item => item !== newSaved));
             });
 
             setSavedButton((prev) => (
@@ -77,29 +82,34 @@ export function SongContainer(props){
                     ...prev,
                     [key]: 'null'
                 }
-            ))
+            ));
 
         }
         else{
             setSaved((prev) => (
                 [...prev, newSaved]
-            ))
+            ));
+            
 
             setSavedButton((prev) => (
                 {
                     ...prev,
                     [key]: 'save'
                 }
-            ))
+            ));
+
+            setSnackbar(true);
         }
         
     
     }
 
-    const removeSave = (title) => { 
-        setSaved((prev) => { 
-            return prev.filter((item => item.title !== title ))
-        })
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway'){
+            return;
+        }
+
+        setSnackbar(false);
     }
 
     
@@ -213,7 +223,11 @@ export function SongContainer(props){
                         <Grid item xs={8} style={{ minWidth: '65%'}}>
                             <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} onLoadArt={onLoadArt}/>
                         </Grid>
-                        
+                        <Snackbar open={snackbar} autoHideDuration={2000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+                            <Alert onClose={handleCloseSnackbar} severity="success">
+                                Saved!
+                            </Alert>
+                        </Snackbar>
                     </Grid>
                 </div>
             );
