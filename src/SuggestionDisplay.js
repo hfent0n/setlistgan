@@ -17,6 +17,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 import albumArt from 'album-art';
 import ReactPlayer from 'react-player'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,6 +55,13 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'center'
 
+    },
+    loadingWheel: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAalign: 'center',
+        minHeight: '80vh'
     }
 
   }));
@@ -131,10 +139,20 @@ export function SuggestionCard(props){
         ))
         
     }
+
     
     
-    
-    
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        if (Object.keys(props.suggestion).length === Object.keys(art).length){
+            setLoading(false);
+            props.onLoadArt(false)
+        }
+        return () => {
+            setLoading(true);
+            props.onLoadArt(true);
+        }
+    })
     
     const suggestions = props.suggestion.map((x, index) => (
         <Grid item xs = {12}>
@@ -176,16 +194,30 @@ export function SuggestionCard(props){
         
         </Grid>
         ))
-    return(
-        <Grid
-            style={{marginTop: 10}}
-            container
-            spacing={2}
-        >
-            {suggestions}
-
-        </Grid>
-    );
+    
+    if (loading === true){
+        return (
+            <Grid item xs = {12} className={classes.loadingWheel}>
+                <CircularProgress></CircularProgress>
+            </Grid>
+        );
+        
+    }
+    else{
+        
+        return(
+            <Grid
+                style={{marginTop: 10}}
+                container
+                spacing={2}
+            >
+                {suggestions}
+    
+            </Grid>
+        );
+    }
+    
+    
 }
 
 

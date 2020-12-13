@@ -6,13 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
-import { Save, SportsRugbySharp } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import albumArt from 'album-art';
 import { Card, CardMedia } from '@material-ui/core';
-import CardContent from '@material-ui/core/CardContent';
-import Paper from '@material-ui/core/Paper';
-import { NonceProvider } from 'react-select';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,9 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
     overlayInfo: {
         marginLeft: 20,
-        
-
-    }
+    },
     
   }));
 
@@ -145,7 +140,13 @@ export function SongContainer(props){
                 
             })
         }
+        return () => setArt('')
     }, [song])
+
+    const [loadingArt, setLoadingArt] = useState(true)
+    const onLoadArt = ((loadArt) => {
+        setLoadingArt(loadArt);
+    })
 
 
     if (showSaved !== 'saved'){
@@ -185,7 +186,7 @@ export function SongContainer(props){
                         <Grid item xs={8} style={{ minWidth: '60%'}} >   
                             <Song onChange={changeSuggestion} />
                         </Grid>
-                        <Grid item xs={12} style={{ minWidth: '70%'}}>
+                        {!loadingArt && (<Grid item xs={12} style={{ minWidth: '70%'}}>
                             <Card className={classes.card}>
                                 <CardMedia
                                     className={classes.media}
@@ -208,14 +209,15 @@ export function SongContainer(props){
                                     </div>
                                 </div>
                             </Card>
-                        </Grid>
+                        </Grid>)}
                         <Grid item xs={8} style={{ minWidth: '65%'}}>
-                            <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
+                            <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} onLoadArt={onLoadArt}/>
                         </Grid>
                         
                     </Grid>
                 </div>
             );
+            
         }
     
     }

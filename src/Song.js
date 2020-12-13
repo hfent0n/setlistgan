@@ -18,7 +18,6 @@ export function Song(props) {
   }
 
   return (
-
     <Autocomplete
       id="song-choice"
       options={songOptions}
