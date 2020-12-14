@@ -11,6 +11,8 @@ import albumArt from 'album-art';
 import { Card, CardMedia } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import background from './img/background.jpg';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,6 +41,22 @@ const useStyles = makeStyles((theme) => ({
     },
     overlayInfo: {
         marginLeft: 20,
+    },
+    background: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height:'100%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        
+    },
+    backgroundSuggestion: {
+        width: '100%',
+        height:'100%',
+        
     },
     
   }));
@@ -158,11 +176,14 @@ export function SongContainer(props){
         setLoadingArt(loadArt);
     })
 
-
+    const [loadingSong, setLoadingSong] = useState(false);
+    const onLoadingSong = ((newLoadingSong) => {
+        setLoadingSong(newLoadingSong);
+    })
     if (showSaved !== 'saved'){
         if (suggestion==null){
             return (
-                <div>
+                <div className={classes.background} style={{background: "linear-gradient(rgba(255,23,68, 0.2), rgba(255,23,68,0.2)), " + "url(" +  background + ")"}}>
                     <Grid 
                         container
                         direction="row"
@@ -171,9 +192,15 @@ export function SongContainer(props){
                         style={{ minHeight: '30vh' }}
                     >
                         <Grid item xs={6}>   
-                            <Song onChange={changeSuggestion} />
+                            <Song onChange={changeSuggestion} onLoadingSong={onLoadingSong}/>
                         </Grid>
+                        {loadingSong && (
+                            <Grid item xs={6}> 
+                                <CircularProgress></CircularProgress>
+                            </Grid>
+                        )}
                     </Grid>
+                    
                     
                     
                 </div>
@@ -191,10 +218,11 @@ export function SongContainer(props){
                         justify="flex-start"
                         alignItems="center"
                         spacing={1}
+                        className={classes.backgroundSuggestion} style={{background: "linear-gradient(rgba(255,23,68, 0.2), rgba(255,23,68,0.2)), " + "url(" +  background + ")"}}
                     >
-
+                        
                         <Grid item xs={8} style={{ minWidth: '60%'}} >   
-                            <Song onChange={changeSuggestion} />
+                            <Song onChange={changeSuggestion} onLoadingSong={onLoadingSong}/>
                         </Grid>
                         {!loadingArt && (<Grid item xs={12} style={{ minWidth: '70%'}}>
                             <Card className={classes.card}>
@@ -220,6 +248,14 @@ export function SongContainer(props){
                                 </div>
                             </Card>
                         </Grid>)}
+                    </Grid>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="flex-start"
+                        alignItems="center"
+                        spacing={1}
+                    >
                         <Grid item xs={8} style={{ minWidth: '65%'}}>
                             <SuggestionCard suggestion={suggestion} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} onLoadArt={onLoadArt}/>
                         </Grid>
@@ -229,6 +265,7 @@ export function SongContainer(props){
                             </Alert>
                         </Snackbar>
                     </Grid>
+                
                 </div>
             );
             
@@ -236,7 +273,7 @@ export function SongContainer(props){
     
     }
     else{
-        if (saved.length == 0){
+        if (saved.length === 0){
             return (
                 <div>
                     <IconButton onClick={() => setShowSaved(null)}>
