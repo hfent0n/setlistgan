@@ -10,6 +10,11 @@ import { VariableSizeList } from 'react-window';
 import {matchSorter} from 'match-sorter';
 import { Typography } from '@material-ui/core';
 
+
+// const useStyles = makeStyles((theme) => ({
+  
+  
+// }));
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props) {
@@ -129,15 +134,19 @@ export function Song(props) {
   return (
     <Autocomplete
       id="virtualize-demo"
-      style={{background: 'rgba(255,23,68, 0.2)'}}
+      style={{background: 'rgba(255,255,255, 1.0)', border: '2px solid black', borderRadius: '8px'}}
+
       disableListWrap
       classes={classes}
+      blurOnSelect={true}
+      clearOnBlur={true}
       filterOptions={filterOptions}
       ListboxComponent={ListboxComponent}
       renderGroup={renderGroup}
+      hiddenLabel="true"
       options={songOptions.map(x => x.label)}
       onChange={(event, e) => handleChange(e)}
-      renderInput={(params) => <TextField {...params} variant="outlined" label="Song choice" />}
+      renderInput={(params) => <TextField {...params} placeholder="Song choice" variant="outlined"  />}
       renderOption={(option) => <Typography noWrap>{option}</Typography>}
     />
   );

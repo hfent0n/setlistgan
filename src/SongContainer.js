@@ -13,6 +13,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import background from './img/background.jpg';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import logo from './img/Logo.png'
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,11 +55,25 @@ const useStyles = makeStyles((theme) => ({
         backgroundSize: 'cover',
         
     },
+    backgroundSaved: {
+        width: '100%',
+        height:'100%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        
+    },
     backgroundSuggestion: {
         width: '100%',
         height:'100%',
         
     },
+    logo: { 
+        height: '120px',
+        width: '600px',
+        
+        
+    }
     
   }));
 
@@ -68,7 +84,13 @@ export function SongContainer(props){
         media: {
             height: 300,
             width: '100%'
+          },
+          logo: {
+            height: '120px',
+            width: '600px',
+            
           }
+
     }
 
     const classes=useStyles();
@@ -184,13 +206,25 @@ export function SongContainer(props){
         if (suggestion==null){
             return (
                 <div className={classes.background} style={{background: "linear-gradient(rgba(255,23,68, 0.2), rgba(255,23,68,0.2)), " + "url(" +  background + ")"}}>
+                    
+                            
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:'15vh'}}>   
+                        <CardMedia
+                                    className={classes.logo}
+                                    image={logo}
+                                    title=""
+                                    style={styles.logo}
+                        />
+                    </div>              
+            
                     <Grid 
                         container
                         direction="row"
                         justify="center"
                         alignItems="flex-end"
-                        style={{ minHeight: '30vh' }}
-                    >
+                        style={{ minHeight: '10vh', marginTop:'30px' }}
+                    >   
+                        
                         <Grid item xs={6}>   
                             <Song onChange={changeSuggestion} onLoadingSong={onLoadingSong}/>
                         </Grid>
@@ -200,6 +234,20 @@ export function SongContainer(props){
                             </Grid>
                         )}
                     </Grid>
+                    <Grid 
+                        container
+                        justify="center"
+                        alignItems="center"
+                        style={{marginTop:'30px' }}
+                        
+                    >
+                        <Grid item xs={5} >   
+                            <Typography variant="h4" component="h4" style={{ textAlign: 'center'}}>
+                                Pick a <Box display="inline" style={{color: 'rgb(248, 131, 26, 1)'}}> track </Box> and we'll suggest another song to help you make your perfect <Box display="inline"  style={{color: 'rgb(63, 229, 229)'}}>set list </Box>!
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    
                     
                     
                     
@@ -290,14 +338,23 @@ export function SongContainer(props){
                 </div>
             )
         }
-        return (
-            <div>
-                <IconButton onClick={() => setShowSaved(null)}>
-                    <ArrowBackIcon />
-                </IconButton>
-                <SuggestionCard suggestion={saved} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved}/>
-            </div>
-        )
+          
+        else{
+            return (
+                <div className={classes.backgroundSaved} style={{background: "linear-gradient(rgba(255,23,68, 0.2), rgba(255,23,68,0.2)), " + "url(" +  background + ")", position: 'static', top: '0', left: '0', height: '100vh', width: '100vw',}} >
+                    
+                    <IconButton onClick={() => setShowSaved(null)}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <div style={{ width: '75%'}}>
+                            <SuggestionCard suggestion={saved} onChange={changeSaved} onChangeLike={changeLike} likes={likes} savedButton={savedButton} onShowSaved={changeShowSaved} onLoadArt={onLoadArt}/>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        
         
     }
 }
