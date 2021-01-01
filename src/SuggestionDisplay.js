@@ -228,7 +228,7 @@ export function YoutubeDisplay(props){
     useEffect(() => {
         if (url === '' && props.youtube === true){
             
-            YTSearch({key: 'AIzaSyAWZ_kI06oQLDacuFiRX7mITlT-PvmVgOw', term: props.suggestion, results: 1}, (videos) =>{
+            YTSearch({key: process.env.REACT_APP_API_KEY, term: props.suggestion, results: 1}, (videos) =>{
                 setUrl(videos[0].id.videoId);
             });
             //setUrl('https://www.youtube.com/watch?v=qEoxJ0QZkZ4');
